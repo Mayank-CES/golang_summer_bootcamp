@@ -10,16 +10,17 @@ type BankAccount struct {
 	balance float64
 }
 
-func (c *BankAccount) deposit(amount float64) {
-
+func (c *BankAccount) deposit(amount float64, wg *sync.WaitGroup) {
+	defer wg.Done()
 	c.mu.Lock()
 	defer c.mu.Unlock()
+
 	c.balance = c.balance + amount
 	fmt.Println("Amount Deposited - ", amount)
 }
 
-func (c *BankAccount) withdraw(amount float64) {
-
+func (c *BankAccount) withdraw(amount float64, wg *sync.WaitGroup) {
+	defer wg.Done()
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
@@ -35,21 +36,12 @@ func main() {
 
 	var wg sync.WaitGroup
 
-	doIncrement := func(n float64) {
-		c.deposit(n)
-		wg.Done()
-	}
-
-	doWithdrawal := func(n float64) {
-		c.withdraw(n)
-		wg.Done()
-	}
-
 	wg.Add(3)
-	go doIncrement(800)
-	go doIncrement(100)
 
-	go doWithdrawal(200)
+	go c.deposit(800, &wg)
+	go c.deposit(100, &wg)
+
+	go c.withdraw(200, &wg)
 
 	wg.Wait()
 	fmt.Println(c.balance)

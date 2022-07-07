@@ -16,13 +16,20 @@ func getFrequency(ch <-chan string, result *[26]int) {
 	}
 }
 
+func printFrequency(result [26]int) {
+	for i, count := range result {
+		if count > 0 {
+			fmt.Printf(" %q:%d", 97+i, count)
+		}
+	}
+
+}
+
 func main() {
-	// pings := make(chan string, 1)
-	// pongs := make(chan string, 1)
 
 	ch := make(chan string, 5)
 	var dataset = [5]string{"quick", "brown", "fox", "lazy", "dog"}
-	var result = [26]int{26 * 0}
+	var result = [26]int{}
 
 	wg.Add(5)
 
@@ -35,6 +42,7 @@ func main() {
 
 	wg.Wait()
 
-	fmt.Println(result)
-
+	fmt.Printf("{")
+	printFrequency(result)
+	fmt.Printf(" }")
 }
