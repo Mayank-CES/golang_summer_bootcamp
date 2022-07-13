@@ -10,11 +10,11 @@ import (
 //SetupRouter ... Configure routes
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
-	//authorized := router.Group("/", gin.BasicAuth(gin.Accounts{
-	//	"max": "639",
-	//}))
+	authorized := router.Group("/", gin.BasicAuth(gin.Accounts{
+		"max": "639",
+	}))
 
-	gp := router.Group("/")
+	gp := authorized.Group("/")
 	{
 		customerRoutes := gp.Group("/customer")
 		{

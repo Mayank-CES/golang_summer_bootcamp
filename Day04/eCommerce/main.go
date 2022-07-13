@@ -2,10 +2,10 @@ package main
 
 import (
 	"eCommerce/Config"
-	_ "eCommerce/Controllers"
 	"eCommerce/Models"
 	"eCommerce/Routes"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 )
 
