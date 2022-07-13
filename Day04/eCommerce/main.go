@@ -1,10 +1,12 @@
 package main
 
 import (
-	"eCommerce/Config"
-	"eCommerce/Models"
-	"eCommerce/Routes"
 	"fmt"
+
+	"github.com/Mayank-CES/golang_summer_bootcamp/Day04/eCommerce/Config"
+	"github.com/Mayank-CES/golang_summer_bootcamp/Day04/eCommerce/Models"
+	"github.com/Mayank-CES/golang_summer_bootcamp/Day04/eCommerce/Routes"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 )
@@ -21,12 +23,10 @@ func main() {
 	Config.DB.AutoMigrate(&Models.Customer{}, &Models.Retailer{}, &Models.Product{}, &Models.Transaction{})
 
 	r := Routes.SetupRouter()
-	//Services.NewCustomerService(Repository.NewRepo())
+	// Services.NewCustomerService(Repository.NewRepo())
 
 	err := r.Run()
 	if err != nil {
 		return
 	}
 }
-
-

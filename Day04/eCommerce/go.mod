@@ -1,4 +1,4 @@
-module eCommerce
+module github.com/Mayank-CES/golang_summer_bootcamp/Day04/eCommerce
 
 go 1.16
 

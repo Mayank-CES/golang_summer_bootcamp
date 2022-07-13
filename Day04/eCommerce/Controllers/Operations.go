@@ -1,20 +1,28 @@
 package Controllers
 
 import (
-	"eCommerce/Models"
-	"eCommerce/Services"
 	"fmt"
+	"net/http"
+
+	"github.com/Mayank-CES/golang_summer_bootcamp/Day04/eCommerce/Models"
+	"github.com/Mayank-CES/golang_summer_bootcamp/Day04/eCommerce/Services"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
-	"net/http"
 )
 
+type Controller struct {
+	service Services.CustomerServices
+}
 
-//CreateCustomerAccount ... Create Customer Account
-func CreateCustomerAccount(c *gin.Context) {
+func NewController(services Services.CustomerServices) *Controller {
+	return &Controller{service: services}
+}
+
+// CreateCustomerAccount ... Create Customer Account
+func (cnt *Controller) CreateCustomerAccount(c *gin.Context) {
 	var customer Models.Customer
 	c.BindJSON(&customer)
-	err := Services.CService.CreatCustomerAccount(&customer)
+	err := cnt.service.CreatCustomerAccount(&customer)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.AbortWithStatus(http.StatusNotFound)
@@ -25,16 +33,16 @@ func CreateCustomerAccount(c *gin.Context) {
 
 /*
 //BuyProduct ... Buy the product
-func BuyProduct(c *gin.Context) {
+func (cnt *Controller) BuyProduct(c *gin.Context) {
 	var product Models.Product
 	id := c.Params.ByName("id")
-	err := Services.CService.GetProductByID(&product, id)
+	err := cnt.service.GetProductByID(&product, id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, product)
 		fmt.Println("An Error occurred while fetching the product")
 	}
 	c.BindJSON(&product)
-	err = Services.CService.BuyProduct(&product, id)
+	err = cnt.service.BuyProduct(&product, id)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
@@ -43,12 +51,11 @@ func BuyProduct(c *gin.Context) {
 }
 */
 
-
 // CheckOrderByID ... Get the product by id
-func CheckOrderByID(c *gin.Context) {
+func (cnt *Controller) CheckOrderByID(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var order Models.Transaction
-	err := Services.CService.CheckOrderByID(&order, id)
+	err := cnt.service.CheckOrderByID(&order, id)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
@@ -59,9 +66,9 @@ func CheckOrderByID(c *gin.Context) {
 /*------- Products ------*/
 
 // GetAllProducts  ... Get all Products
-func GetAllProducts(c *gin.Context) {
+func (cnt *Controller) GetAllProducts(c *gin.Context) {
 	var products []Models.Product
-	err := Services.CService.GetAllProducts(&products)
+	err := cnt.service.GetAllProducts(&products)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
@@ -69,12 +76,11 @@ func GetAllProducts(c *gin.Context) {
 	}
 }
 
-
 // GetProductByID ... Get the product by id
-func GetProductByID(c *gin.Context) {
+func (cnt *Controller) GetProductByID(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var product Models.Product
-	err := Services.CService.GetProductByID(&product, id)
+	err := cnt.service.GetProductByID(&product, id)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
@@ -85,10 +91,10 @@ func GetProductByID(c *gin.Context) {
 /*---------- Retailer ----------*/
 
 // CreateRetailerAccount  ... Create Customer Account
-func CreateRetailerAccount(c *gin.Context) {
+func (cnt *Controller) CreateRetailerAccount(c *gin.Context) {
 	var retailer Models.Retailer
 	c.BindJSON(&retailer)
-	err := Services.CService.CreatRetailerAccount(&retailer)
+	err := cnt.service.CreatRetailerAccount(&retailer)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.AbortWithStatus(http.StatusNotFound)
@@ -98,10 +104,10 @@ func CreateRetailerAccount(c *gin.Context) {
 }
 
 // AddProduct ... Create Customer Account
-func AddProduct(c *gin.Context) {
+func (cnt *Controller) AddProduct(c *gin.Context) {
 	var product Models.Product
 	c.BindJSON(&product)
-	err := Services.CService.AddProduct(&product)
+	err := cnt.service.AddProduct(&product)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.AbortWithStatus(http.StatusNotFound)
@@ -110,18 +116,18 @@ func AddProduct(c *gin.Context) {
 	}
 }
 
-//PatchProduct ... Buy the product
-func PatchProduct(c *gin.Context) {
+// PatchProduct ... Buy the product
+func (cnt *Controller) PatchProduct(c *gin.Context) {
 	var product Models.Product
 	id := c.Params.ByName("id")
-	err := Services.CService.GetProductByID(&product, id)
+	err := cnt.service.GetProductByID(&product, id)
 	if err != nil {
-		//c.JSON(http.StatusNotFound, product)
+		// c.JSON(http.StatusNotFound, product)
 		fmt.Println("An Error occurred while fetching the product")
 	}
 	var updatedProduct Models.PatchProd
 	c.BindJSON(&updatedProduct)
-	err = Services.CService.PatchProduct(&updatedProduct,id)
+	err = cnt.service.PatchProduct(&updatedProduct, id)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
@@ -130,10 +136,10 @@ func PatchProduct(c *gin.Context) {
 }
 
 // GetRHistoryByID ... Get the History by id
-func GetRHistoryByID(c *gin.Context) {
+func (cnt *Controller) GetRHistoryByID(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var order Models.Transaction
-	err := Services.CService.GetRHistoryByID(&order, id)
+	err := cnt.service.GetRHistoryByID(&order, id)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
@@ -141,9 +147,9 @@ func GetRHistoryByID(c *gin.Context) {
 	}
 }
 
-
-////UpdateInfo ... Update the user information
-//func UpdateInfo(c *gin.Context) {
+// //UpdateInfo ... Update the user information
+// func (cnt
+// *Controller) UpdateInfo(c *gin.Context) {
 //	var student Models.Student
 //	id := c.Params.ByName("id")
 //	err := Models.GetStudentByID(&student, id)
@@ -158,11 +164,11 @@ func GetRHistoryByID(c *gin.Context) {
 //	} else {
 //		c.JSON(http.StatusOK, student)
 //	}
-//}
+// }
 
 /*
 //DeleteStudent ... Delete the user
-func DeleteStudent(c *gin.Context) {
+func (cnt *Controller) DeleteStudent(c *gin.Context) {
 	var student Models.Student
 	id := c.Params.ByName("id")
 	err := Models.DeleteStudent(&student, id)
@@ -186,7 +192,7 @@ func DeleteStudent(c *gin.Context) {
 
 
 //GetAllMarks ... Get all marks
-func GetAllMarks(c *gin.Context) {
+func (cnt *Controller) GetAllMarks(c *gin.Context) {
 	var marks []Models.Marks							// Check for availability of marks
 	err := Models.GetAllMarks(&marks)
 	if err != nil {
@@ -198,7 +204,7 @@ func GetAllMarks(c *gin.Context) {
 
 
 //GetMarksByID ... Get the user by id
-func GetMarksByID(c *gin.Context) {
+func (cnt *Controller) GetMarksByID(c *gin.Context) {
 
 	studentId := c.Params.ByName("student_id")
 	var student Models.Student						// Check for availability of student
@@ -228,7 +234,7 @@ func GetMarksByID(c *gin.Context) {
 
 
 //UpdateMarks ... Update the user information
-func UpdateMarks(c *gin.Context) {
+func (cnt *Controller) UpdateMarks(c *gin.Context) {
 	var student Models.Student
 	id := c.Params.ByName("id")
 
@@ -252,7 +258,7 @@ func UpdateMarks(c *gin.Context) {
 }
 
 //DeleteMarks ... Delete the marks by id		*********** 1 More case-----No result found for marks for the id
-func DeleteMarks(c *gin.Context) {
+func (cnt *Controller) DeleteMarks(c *gin.Context) {
 	studentId := c.Params.ByName("student_id")
 	id := c.Params.ByName("id")
 	var student Models.Student						// Check for availability of student
@@ -277,7 +283,7 @@ func DeleteMarks(c *gin.Context) {
 
 }
 
-func DeleteAllMarks(c *gin.Context) {
+func (cnt *Controller) DeleteAllMarks(c *gin.Context) {
 	studentId := c.Params.ByName("student_id")
 	var student Models.Student						// Check for availability of student
 	err := Models.GetStudentByID(&student, studentId)
@@ -295,5 +301,4 @@ func DeleteAllMarks(c *gin.Context) {
 
 }
 
- */
-
+*/
