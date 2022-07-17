@@ -17,14 +17,25 @@ func main() {
 		fmt.Println("Status:", err)
 	}
 
-	defer Config.DB.Close()
+	defer func(DB *gorm.DB) {
+		err := DB.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(Config.DB)
+
 	Config.DB.AutoMigrate(&Models.Customer{}, &Models.Retailer{}, &Models.Product{}, &Models.Transaction{})
+
+
 
 	r := Routes.SetupRouter()
 	//Services.NewCustomerService(Repository.NewRepo())
 
+
+
 	err := r.Run()
 	if err != nil {
+		panic(err)
 		return
 	}
 }
